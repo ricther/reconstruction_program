@@ -9,9 +9,10 @@ void CMedialMap::fillupoutside()
     {
       if (SignMap[i][j]==0)
       {
-        if(medial_axis[i][j]==0)
+        if(medial_axis[j][i]==0)
         {
           SignMap[i][j]=255;
+          DistancsMap[i][j]=0;
         }
       }
     }

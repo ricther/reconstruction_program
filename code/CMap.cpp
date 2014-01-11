@@ -6,6 +6,7 @@
 #include"Regionfill.h"
 #include "CFileDebug.h"
 #include "CContour.h"
+#include <iostream>
 using namespace std;
 CMap::CMap(CContour* temp_contour):NUMROWS(NumRows),NUMCOLS(NumCols)
 {
@@ -21,6 +22,9 @@ CMap::~CMap()
   
   if(DistancsMap!=NULL)
   freeMap((void**)DistancsMap);
+
+  freeMap((void**)gx);
+  freeMap((void**)gy);
 }
 void CMap::setup()
 {
@@ -57,6 +61,7 @@ bool CMap::mallocMap_double(double **& array)
   double *arr_ptr;
   arr_ptr=(double*) calloc(NUMCOLS*NUMROWS,sizeof(double));//calloc can initialize the memory with 0
   //  memset(arr_ptr,NUMCOLS*NUMROWS,sizeof(double)*NUMCOLS*NUMROWS);
+  //  std::cout<<"mallocMap_double_size:"<<NUMCOLS*NUMROWS*sizeof(double)<<"double_size:"<<sizeof(double)<<"\n";
   if (arr_ptr==NULL)
   {
     return false;
@@ -383,5 +388,6 @@ void CMap::gradient()
   
   gx[r1][c1] = DistancsMap[r1][c1] - DistancsMap[r1][c1 -1];
   gy[r1][c1] = DistancsMap[r1][c1] - DistancsMap[r1-1][c1];
-  freeMap((void**)SignMap);
+  //  freeMap((void**)SignMap);
+  //SignMap=NULL;
 }

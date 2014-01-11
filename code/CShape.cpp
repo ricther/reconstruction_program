@@ -89,16 +89,19 @@ void CShape::Setup()
 {
   m_skeleton->build_skeleton_new(map_Layer);
   std::map<float,CLayer*>::iterator itr=map_Layer.begin(),etr=map_Layer.end();
-  int count=0;
+  int layer_count=0;
+  int contour_count=0;
   for(;itr!=etr;++itr)
   {
-    count++;
+    layer_count++;
     (itr->second)->setup(moment_one_point);
+    contour_count+=(itr->second)->map_contour.size();
     //(itr->second)->normalize(center_point);
     //    (itr->second)->normalize(moment_one_point);
     //(itr->second)->InitMap();
     //(itr->second)->m_Map->gradient();
   }
+  std::cout<<"Layer NUM:"<<layer_count<<"\t"<<"Contour NUM"<<contour_count<<"\n";
 }
 
 void CShape::Registration()

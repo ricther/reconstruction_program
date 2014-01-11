@@ -443,6 +443,19 @@ void CRegistration::gradientdescent_smoother(CContour* lower,CContour* higher,do
   {
     current_params = record[kNumberOfIteration];
   }
+  std::cout<<"Iteration:"<<it<<"\n";
+  for (int xx = 0; xx < MatrixRes; ++xx)
+  {
+    for (int yy = 0; yy < MatrixRes; ++yy)
+    {
+      double x=Dcpx[xx][yy],y=Dcpy[xx][yy];
+      if (x!=0&&y!=0)
+      {
+        std::cout<<"Dcpxy["<<xx<<","<<yy<<"]:"<<x<<","<<y<<";";
+      }
+    }
+    std::cout<<"\n";
+  }
   free_2D_double_array(Dcpx);
   free_2D_double_array(Dcpy);
 }

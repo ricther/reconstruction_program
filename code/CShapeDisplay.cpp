@@ -136,7 +136,7 @@ void CShapeDisplay::draw_normal_points(vtkSmartPointer<vtkRenderer> renderer)
   {
     renderer->AddActor((*itr)->m_actor);
   }
-  //draw_medial_axis(renderer);
+  draw_medial_axis(renderer);
   //draw_lattice(renderer);
   vtkSmartPointer<KeyPressInteractorStyle> style= vtkSmartPointer<KeyPressInteractorStyle>::New(); 
   m_interactor->SetInteractorStyle(style);

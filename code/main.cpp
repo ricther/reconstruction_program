@@ -26,12 +26,12 @@
 #include <vtkLight.h>
 using namespace std;
 
-const int MatrixRes=28;
-const int NumRows=700;
-const int NumCols=700;
+const int MatrixRes=56;
+const int NumRows=500;
+const int NumCols=500;
 const int interval_of_point=1;
 const float layer_interval_scale=5;
-const int interval_of_line_layer=5;// the interval of the lines within one layer
+const int interval_of_line_layer=1;// the interval of the lines within one layer
 CShape m_source;
 
 
@@ -59,7 +59,7 @@ void init_data(CShape&m_source)
 {
   char currentPath[200];
   getcwd(currentPath, sizeof(currentPath));
-  fstream fin("../config",ios_base::in);
+  fstream fin("../config3",ios_base::in);
   std::vector<string> vec_filename;
   string temp;
   if(fin.is_open())

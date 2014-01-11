@@ -208,12 +208,21 @@ void CContour::smooth()
     *vec_Points_Origin[i]= temp;
   } 
 }
-
+#include"CFileDebug.h"
 void CContour::calculate_medial_map(double** medial_axis)
 {
   m_medial_map = new CMedialMap(this,medial_axis);
   m_medial_map->setup();
   m_medial_map->gradient();
+  CFileDebug m_debugfile6("./medial_DistancsMap_20");
+  m_debugfile6.Output(m_medial_map->DistancsMap);
+  CFileDebug file("./only_medial_axis");
+  file.Output(medial_axis);
+  CFileDebug m_debugfile7("./medial_sign_20");
+  m_debugfile7.Output_sign(m_medial_map->SignMap);
+  
+
+
 }
 
 void CContour::swap_map_medialmap()

@@ -61,8 +61,8 @@ void CFileDebug::Output_sign(unsigned char **& map)
   {
     return;
   }
-  int row=300;
-  int col=300;
+  int row=NumRows;
+  int col=NumCols;
   int irow=0,icol=0;
   int temp=0;
   for(;irow<row;++irow)

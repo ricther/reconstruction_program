@@ -154,7 +154,7 @@ void CLayer::setup(CPoint shape_center_point)
   for (; itr!=etr; ++itr)
   {
     (itr->second)->normalize(shape_center_point);
-    //    (itr->second)->smooth();
+    (itr->second)->smooth();
     (itr->second)->InitMap();
   }
   if (contour_Num>1)
@@ -228,6 +228,4 @@ void CLayer::calculate_medial_axis()
       }
     }
   }
-  //  CFileDebug file("medial_axis");
-  //  file.Output(medial_axis);
 }
