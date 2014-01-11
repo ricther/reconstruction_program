@@ -383,4 +383,5 @@ void CMap::gradient()
   
   gx[r1][c1] = DistancsMap[r1][c1] - DistancsMap[r1][c1 -1];
   gy[r1][c1] = DistancsMap[r1][c1] - DistancsMap[r1-1][c1];
+  freeMap((void**)SignMap);
 }

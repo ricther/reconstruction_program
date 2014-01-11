@@ -232,3 +232,4 @@ void CContour::swap_medialmap_map()
   m_Map=m_temp_map;
   delete m_medial_map;
 }
+
