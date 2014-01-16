@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
 #include "CContour.h"
+
 //function of freeform code
+
 class CPoint;
 class CShape;
 class CLayer;
@@ -22,18 +24,13 @@ class ParamRecord
   void initial(double errorE,CContour* higher);
 };
 
-
-extern  const int MatrixRes;
-extern  const int NumRows;
-extern  const int NumCols;
-
 class CRegistration
 {
   public:
   CRegistration(CShape*);
   CShape *SourceShape;
   void freeform_res1(CContour*,CContour*);//first is lower_layer equal target, second is higher_layer equal source
-  static const int kNumberOfIteration;
+  int kNumberOfIteration;
   void Register();
 
   private:
@@ -64,6 +61,7 @@ class CRegistration
   double cubic_spline(double u,int o);
   void get_correspondence(CCorrespond*,CContour*higher,CContour*lower);
   int get_closest_point(std::vector<CPoint*>&,CPoint);
+  int get_closest_point(std::vector<CPoint*>&vec_points,std::vector<CPoint*>&medial_points,CPoint);
   double** XB;// original control point coordinates;
   double** YB;
   double** dXB;
@@ -125,6 +123,7 @@ class CRegistration
   //find the nearest contour except used
   CContour* find_nearest_contour(CContour*,CLayer*,int);
   void regist_lower_long_higher_short(CContour*,CContour*);
+  bool use_medial_axis_point;
 };
 
 

@@ -7,6 +7,7 @@
 #include "CMap.h"
 #include "CCorespond.h"
 #include "CFileDebug.h"
+#include "initial.h"
 using namespace std;
 void ParamRecord::operator=(const ParamRecord & right)
 {
@@ -52,7 +53,7 @@ CRegistration::CRegistration(CShape* source):narrow_band(10),NumberRows(NumRows)
   YB=make_2D_double_array(MatrixRes,MatrixRes);
   dXB=make_2D_double_array(MatrixRes,MatrixRes);
   dYB=make_2D_double_array(MatrixRes,MatrixRes);
-  
+  use_medial_axis_point=false;
   int interval = NumberRows/MatrixRes;
   for (int i = 0; i < MatrixRes; ++i)
   {
@@ -384,9 +385,10 @@ double CRegistration::energy_func_square_diff(CContour* contour)
   }
   return temp;
 }
-const int CRegistration::kNumberOfIteration=60;
+
 void CRegistration::gradientdescent_smoother(CContour* lower,CContour* higher,double errorE)
 {
+  kNumberOfIteration=iteration_number;
   int magicnumber=MatrixRes;
 
   current_params.lattice_x=make_2D_double_array(MatrixRes,MatrixRes);
@@ -444,18 +446,18 @@ void CRegistration::gradientdescent_smoother(CContour* lower,CContour* higher,do
     current_params = record[kNumberOfIteration];
   }
   std::cout<<"Iteration:"<<it<<"\n";
-  for (int xx = 0; xx < MatrixRes; ++xx)
-  {
-    for (int yy = 0; yy < MatrixRes; ++yy)
-    {
-      double x=Dcpx[xx][yy],y=Dcpy[xx][yy];
-      if (x!=0&&y!=0)
-      {
-        std::cout<<"Dcpxy["<<xx<<","<<yy<<"]:"<<x<<","<<y<<";";
-      }
-    }
-    std::cout<<"\n";
-  }
+  // for (int xx = 0; xx < MatrixRes; ++xx)
+  // {
+  //   for (int yy = 0; yy < MatrixRes; ++yy)
+  //   {
+  //     double x=Dcpx[xx][yy],y=Dcpy[xx][yy];
+  //     if (x!=0&&y!=0)
+  //     {
+  //       std::cout<<"Dcpxy["<<xx<<","<<yy<<"]:"<<x<<","<<y<<";";
+  //     }
+  //   }
+  //   std::cout<<"\n";
+  // }
   free_2D_double_array(Dcpx);
   free_2D_double_array(Dcpy);
 }
@@ -778,19 +780,48 @@ void CRegistration::get_correspondence(CCorrespond* corres,CContour* shorter,CCo
   for (int i = 0; i < N; ++i)
   {
     temp =*(shorter->vec_new_points[i]);
-    index=get_closest_point(longer->vec_Points_Origin,temp);
-    Parapoint * new_para_point= new Parapoint();
-    if (corres->CorrespondLayer1==temp.z)
+    if (shorter->m_layer->medial_axis_count>0)
     {
-      new_para_point->point1 = *(shorter->vec_points[i]);
-      new_para_point->point2 = *(longer->vec_points[index]);
+      index=get_closest_point(longer->vec_Points_Origin,shorter->m_layer->vec_medial_points,temp);
+      std::cout<<"use medial_axis"<<"\n";
     }
     else
     {
-      new_para_point->point2 = *(shorter->vec_points[i]);
-      new_para_point->point1 = *(longer->vec_points[index]);      
+      index=get_closest_point(longer->vec_Points_Origin,temp);
     }
 
+    Parapoint * new_para_point= new Parapoint();
+    if (corres->CorrespondLayer1==temp.z)
+    {
+      // new_para_point->point1 = *(shorter->vec_points[i]);
+      //new_para_point->point2 = *(longer->vec_points[index]);
+       new_para_point->point1 = *(shorter->vec_Points_Origin[i]);
+       if (use_medial_axis_point)
+       {
+         new_para_point->point2 = *(shorter->m_layer->vec_medial_points[index]);
+         new_para_point->point2.z=longer->vec_Points_Origin[0]->z;
+       }
+       else
+       {
+         new_para_point->point2 = *(longer->vec_Points_Origin[index]);
+       }
+    }
+    else
+    {
+      //new_para_point->point2 = *(shorter->vec_points[i]);
+      //new_para_point->point1 = *(longer->vec_points[index]);
+      new_para_point->point2 = *(shorter->vec_Points_Origin[i]);
+      if (use_medial_axis_point)
+      {
+        new_para_point->point1 = *(shorter->m_layer->vec_medial_points[index]);
+        new_para_point->point1.z=longer->vec_Points_Origin[0]->z;
+      }
+      else
+      {
+        new_para_point->point1 = *(longer->vec_Points_Origin[index]);              
+      }
+
+    }
     corres->map_cor.insert(std::make_pair(i,new_para_point));
   }
 
@@ -808,6 +839,38 @@ int CRegistration::get_closest_point(std::vector<CPoint*>&vec_points,CPoint poin
     double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
     if (d<distancs)
     {
+      distancs=d;
+      result=i;
+    }
+  }
+  return result;
+}
+
+int CRegistration::get_closest_point(std::vector<CPoint*>&vec_points,std::vector<CPoint*>&medial_points,CPoint point)
+{
+  use_medial_axis_point=false;
+  int N = vec_points.size();
+  CPoint temp;
+  int result=-1;
+  double distancs=999999999;
+  for (int i = 0; i < N; ++i)
+  {
+    temp =*(vec_points[i]);
+    double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
+    if (d<distancs)
+    {
+      distancs=d;
+      result=i;
+    }
+  }
+  N = medial_points.size();
+  for (int i = 0; i < N; ++i)
+  {
+    temp =*(medial_points[i]);
+    double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
+    if (d<distancs)
+    {
+      use_medial_axis_point=true;
       distancs=d;
       result=i;
     }

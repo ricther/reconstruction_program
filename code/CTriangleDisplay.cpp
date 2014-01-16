@@ -64,11 +64,20 @@ void CTriangleDisplay:: set_up_data(CShape* m_shape)
     c_itr=l_itr->second->map_contour.begin();c_etr=l_itr->second->map_contour.end();
     for (; c_itr!=c_etr; ++c_itr)
     {
-      p_itr=c_itr->second->vec_points.begin();p_etr=c_itr->second->vec_points.end();
+      p_itr=c_itr->second->vec_Points_Origin.begin();p_etr=c_itr->second->vec_Points_Origin.end();
       for (; p_itr!=p_etr; ++p_itr)
       {
         m_points->InsertPoint(static_cast<vtkIdType>(count++),(*p_itr)->x,(*p_itr)->y,(*p_itr)->z);
         map_pindex_vtkindex.insert(make_pair((*p_itr)->index,count-1));
+      }
+    }
+    if (l_itr->second->vec_medial_points.size()>0)
+    {
+      int N=l_itr->second->vec_medial_points.size();
+      for (int i = 0; i < N; ++i)
+      {
+        m_points->InsertPoint(static_cast<vtkIdType>(count++),l_itr->second->vec_medial_points[i]->x,l_itr->second->vec_medial_points[i]->y,l_itr->second->vec_medial_points[i]->z);
+        map_pindex_vtkindex.insert(make_pair(l_itr->second->vec_medial_points[i]->index,count-1));
       }
     }
   }
@@ -114,9 +123,10 @@ void CTriangleDisplay:: organize_data(CCorrespond* cor)
   for (; itr!=etr; ++itr)
   {
     vtkSmartPointer<vtkTriangle> triangle=vtkSmartPointer<vtkTriangle>::New();
-    triangle->GetPointIds()->SetId(0,map_pindex_vtkindex[(*itr)->a]);
-    triangle->GetPointIds()->SetId(1,map_pindex_vtkindex[(*itr)->b]);
-    triangle->GetPointIds()->SetId(2,map_pindex_vtkindex[(*itr)->c]);
+    int a=map_pindex_vtkindex[(*itr)->a],b=map_pindex_vtkindex[(*itr)->b],c=map_pindex_vtkindex[(*itr)->c];
+    triangle->GetPointIds()->SetId(0,a);
+    triangle->GetPointIds()->SetId(1,b);
+    triangle->GetPointIds()->SetId(2,c);
     m_triangles->InsertNextCell(triangle);
   }
 }
@@ -130,8 +140,8 @@ void CTriangleDisplay:: set_up_vtk()
   m_actor->SetMapper(m_polydata_mapper);
   m_actor->GetProperty()->SetColor(1.0,0.4,0);
   m_actor->GetProperty()->SetAmbient(1.0);
-  m_actor->GetProperty()->SetDiffuse(0.1);
-  m_actor->GetProperty()->SetSpecular(0.2);
+  m_actor->GetProperty()->SetDiffuse(0.5);
+  m_actor->GetProperty()->SetSpecular(0.5);
   //  m_actor->GetProperty()->SetRepresentationToWireframe();
 }
 void CTriangleDisplay:: smooth()
@@ -149,42 +159,42 @@ void CTriangleDisplay:: smooth()
   //  m_triangles->Update();
   //m_triangles->PassVertsOff();
   
-  vtkSmartPointer<vtkDecimatePro> m_deci= vtkSmartPointer<vtkDecimatePro>::New();
-  m_deci->DebugOn();
-  m_deci->SetInputConnection(surface->GetOutputPort());
-  m_deci->SetTargetReduction(0.1);
-  m_deci->PreserveTopologyOn();
-  m_deci->Update();
-  m_deci->Print(std::cout);
+  // vtkSmartPointer<vtkDecimatePro> m_deci= vtkSmartPointer<vtkDecimatePro>::New();
+  // m_deci->DebugOn();
+  // m_deci->SetInputConnection(surface->GetOutputPort());
+  // m_deci->SetTargetReduction(0.1);
+  // m_deci->PreserveTopologyOn();
+  // m_deci->Update();
+  // m_deci->Print(std::cout);
 
-  vtkSmartPointer<vtkSmoothPolyDataFilter> smooth= vtkSmartPointer<vtkSmoothPolyDataFilter>::New();
-  //  smooth->DebugOn();
-  smooth->SetInputConnection(m_deci ->GetOutputPort());
-  // smooth-> SetBoundarySmoothing(1);
-  smooth->SetNumberOfIterations(200);
-  smooth->Update();
-  //  smooth->Print(std::cout);
+  // vtkSmartPointer<vtkSmoothPolyDataFilter> smooth= vtkSmartPointer<vtkSmoothPolyDataFilter>::New();
+  // //  smooth->DebugOn();
+  // smooth->SetInputConnection(m_deci ->GetOutputPort());
+  // // smooth-> SetBoundarySmoothing(1);
+  // smooth->SetNumberOfIterations(200);
+  // smooth->Update();
+  // //  smooth->Print(std::cout);
 
-  vtkSmartPointer<vtkWindowedSincPolyDataFilter> smoother =
-      vtkSmartPointer<vtkWindowedSincPolyDataFilter>::New();
-  //  smoother->DebugOn();
-  smoother->SetInputConnection(smooth->GetOutputPort());
-  smoother->SetNumberOfIterations(100);
-  //  smoother->BoundarySmoothingOff();
-  smoother->FeatureEdgeSmoothingOff();
-  //  smoother->SetFeatureAngle(45.0);
-  //  smoother->SetPassBand(.001);
-  //smoother->NonManifoldSmoothingOn();
-  // smoother->NormalizeCoordinatesOn();
-  smoother->Update();
+  // vtkSmartPointer<vtkWindowedSincPolyDataFilter> smoother =
+  //     vtkSmartPointer<vtkWindowedSincPolyDataFilter>::New();
+  // //  smoother->DebugOn();
+  // smoother->SetInputConnection(smooth->GetOutputPort());
+  // smoother->SetNumberOfIterations(100);
+  // //  smoother->BoundarySmoothingOff();
+  // smoother->FeatureEdgeSmoothingOff();
+  // //  smoother->SetFeatureAngle(45.0);
+  // //  smoother->SetPassBand(.001);
+  // //smoother->NonManifoldSmoothingOn();
+  // // smoother->NormalizeCoordinatesOn();
+  // smoother->Update();
 
-  vtkSmartPointer<vtkPolyDataNormals> normals=vtkSmartPointer<vtkPolyDataNormals>::New();
-  //  normals->DebugOn();
-  normals->SetInputConnection(smoother->GetOutputPort());
-  normals->FlipNormalsOn();
-  normals->Update();
+  // vtkSmartPointer<vtkPolyDataNormals> normals=vtkSmartPointer<vtkPolyDataNormals>::New();
+  // //  normals->DebugOn();
+  // normals->SetInputConnection(smoother->GetOutputPort());
+  // normals->FlipNormalsOn();
+  // normals->Update();
 
-  m_polydata_mapper->SetInputConnection(normals->GetOutputPort());
+  m_polydata_mapper->SetInputConnection(surface->GetOutputPort());
 }
 int CTriangleDisplay:: get_id(int id,int count,int sub_count)
 {

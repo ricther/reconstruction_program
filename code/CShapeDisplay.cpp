@@ -136,8 +136,8 @@ void CShapeDisplay::draw_normal_points(vtkSmartPointer<vtkRenderer> renderer)
   {
     renderer->AddActor((*itr)->m_actor);
   }
-  draw_medial_axis(renderer);
-  //draw_lattice(renderer);
+  //  draw_medial_axis(renderer);
+  //  draw_lattice(renderer);
   vtkSmartPointer<KeyPressInteractorStyle> style= vtkSmartPointer<KeyPressInteractorStyle>::New(); 
   m_interactor->SetInteractorStyle(style);
   style->SetCurrentRenderer(renderer);
@@ -148,8 +148,8 @@ void CShapeDisplay::draw_normal_points(vtkSmartPointer<vtkRenderer> renderer)
 
 void CShapeDisplay::draw_lattice(vtkSmartPointer<vtkRenderer> renderer)
 {
-  CLayer* temp = m_shape->map_Layer[21];
-  CContour* temp_contour=temp->map_contour[temp->map_contourID[0]];
+  CLayer* temp = m_shape->map_Layer[3];
+  CContour* temp_contour=temp->map_contour[temp->map_contourID[1]];
   draw_lattice_content(renderer,temp_contour,1);
   draw_lattice_content(renderer,temp_contour,2);
 }
@@ -217,7 +217,7 @@ void CShapeDisplay::draw_lattice_content(vtkSmartPointer<vtkRenderer> renderer,C
 
 void CShapeDisplay::draw_medial_axis(vtkSmartPointer<vtkRenderer> renderer)
 {
-  CLayer* temp = m_shape->map_Layer[20];
+  CLayer* temp = m_shape->map_Layer[2];
   vector<CPoint*> vec=temp->vec_medial_points;
   int size= vec.size();
   for (int i = 0; i < size; ++i)
@@ -247,7 +247,7 @@ void CShapeDisplay::draw_transformed_points(vtkSmartPointer<vtkRenderer> rendere
   {
     renderer->AddActor((*itr)->m_actor);
   }
-  //draw_lattice(renderer);
+  //  draw_lattice(renderer);
   draw_text(renderer,"transformed_points");
   draw_layerID(renderer,1.0);
 }

@@ -174,6 +174,7 @@ void CContour::normalize(CPoint shape_center_point)//may be use the moment point
     temp->x=(*itr)->x-shape_center_point.x + map_center_x;
     temp->y=(*itr)->y-shape_center_point.y + map_center_y;
     temp->z=(*itr)->z;
+    temp->index=temp->get_index();
     vec_Points_Origin.push_back(temp);
   }
   // center_point->x=center_point->x-shape_center_point.x+map_center_x;
@@ -214,12 +215,12 @@ void CContour::calculate_medial_map(double** medial_axis)
   m_medial_map = new CMedialMap(this,medial_axis);
   m_medial_map->setup();
   m_medial_map->gradient();
-  CFileDebug m_debugfile6("./medial_DistancsMap_20");
-  m_debugfile6.Output(m_medial_map->DistancsMap);
-  CFileDebug file("./only_medial_axis");
-  file.Output(medial_axis);
-  CFileDebug m_debugfile7("./medial_sign_20");
-  m_debugfile7.Output_sign(m_medial_map->SignMap);
+  //CFileDebug m_debugfile6("./medial_DistancsMap_20");
+  //m_debugfile6.Output(m_medial_map->DistancsMap);
+  //CFileDebug file("./only_medial_axis");
+  //file.Output(medial_axis);
+  // CFileDebug m_debugfile7("./medial_sign_20");
+  //  m_debugfile7.Output_sign(m_medial_map->SignMap);
   
 
 

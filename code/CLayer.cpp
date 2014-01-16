@@ -220,12 +220,31 @@ void CLayer::calculate_medial_axis()
           if(first-second>=-margin&&first-second<=margin)
           {
             medial_axis[i][j]=0;
-            CPoint * new_point=new CPoint();
-            new_point->x=j;new_point->y=i;new_point->z=LayerID;
-            vec_medial_points.push_back(new_point);
+          }
+          else if (medial_axis[i][j]==0)
+          {
+            if (itr->second->m_Map->DistancsMap[i][j]<=distance_medialaxis_contour||nitr->second->m_Map->DistancsMap[i][j]<=distance_medialaxis_contour)
+            {
+              medial_axis[i][j]=255;              
+            }
           }
         }
       }
     }
   }
+  for (int i = 0; i < NumRows; ++i)
+  {
+    for (int j = 0; j < NumCols; ++j)
+    {
+      if( medial_axis[i][j]==0)
+      {
+        CPoint * new_point=new CPoint();
+        //because the x,y in the distance map are exchanged.
+        new_point->x=j;new_point->y=i;new_point->z=LayerID*layer_interval_scale;
+        new_point->index=new_point->get_index();
+        vec_medial_points.push_back(new_point);
+      }
+    }
+  }
+
 }

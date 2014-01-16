@@ -24,14 +24,18 @@
 #include "CPoint.h"
 #include "CLayer.h"
 #include <vtkLight.h>
+#include "initial.h"
 using namespace std;
 
 const int MatrixRes=56;
-const int NumRows=500;
-const int NumCols=500;
+const int NumRows=700;
+const int NumCols=700;
 const int interval_of_point=1;
-const float layer_interval_scale=5;
+const float layer_interval_scale=20;
 const int interval_of_line_layer=1;// the interval of the lines within one layer
+const int distance_medialaxis_contour=15;
+const int iteration_number=500;
+
 CShape m_source;
 
 
@@ -119,6 +123,10 @@ double xmins[5] = {0,.25,0.5,0,.5};
 double xmaxs[5] = {0.25,0.50,1,0.5,1};
 double ymins[5] = {0,0,0,.5,.5};
 double ymaxs[5]= {0.5,0.5,0.5,1,1};
+// double xmins[5] = {0,0,0,0,0};
+// double xmaxs[5] = {1,0,0,0,0};
+// double ymins[5] = {0,0,0,0,0};
+// double ymaxs[5]= {1,0,0,0,0};
 
 
 void vtk_draw_view1(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointer<vtkRenderWindowInteractor> interactor)
@@ -133,6 +141,8 @@ void vtk_draw_view1(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   
   //  m_source.m_display->draw_origin_points(renderer);
   m_source.m_display->draw_normal_points(renderer);
+
+  renderer->GetActiveCamera()->SetParallelProjection(1);
   
   renderer->ResetCamera();
 
@@ -166,7 +176,9 @@ void vtk_draw_view2(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   
   //  m_source.m_display->draw_normal_points(renderer);
   m_source.m_display->draw_triangle(renderer,interactor);
-  
+
+  renderer->GetActiveCamera()->SetParallelProjection(1);
+    
   renderer->ResetCamera();
 
   // renderWindow->Render();
@@ -182,6 +194,8 @@ void vtk_draw_view3(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   renderer->SetViewport(xmins[2],ymins[2],xmaxs[2],ymaxs[2]);
   //if transformed vector size =0 ; will render the origin points
   m_source.m_display->draw_transformed_points(renderer);
+
+  renderer->GetActiveCamera()->SetParallelProjection(1);
   
   renderer->ResetCamera();
 
@@ -198,6 +212,8 @@ void vtk_draw_view4(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   renderer->SetViewport(xmins[3],ymins[3],xmaxs[3],ymaxs[3]);
   
   m_source.m_display->draw_skeleton(renderer,interactor);
+
+  renderer->GetActiveCamera()->SetParallelProjection(1);
   
   renderer->ResetCamera();
 
@@ -214,6 +230,8 @@ void vtk_draw_view5(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   renderer->SetViewport(xmins[4],ymins[4],xmaxs[4],ymaxs[4]);
   
   m_source.m_display->draw_correspond(renderer);
+
+  renderer->GetActiveCamera()->SetParallelProjection(1);
   
   renderer->ResetCamera();
 
