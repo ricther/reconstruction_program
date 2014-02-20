@@ -195,20 +195,26 @@ void CContour::reset()
 
 void CContour::smooth()
 {
-  float smooth_factor=30.0;
+  float smooth_factor=4.0;
   int size=vec_Points_Origin.size();
   for (int i = 0; i < size; ++i)
   {
     CPoint temp1 = *vec_Points_Origin[i];
-    for(int j=1;j < smooth_factor;j++ )
+    for(int j=-smooth_factor;j <= smooth_factor;j++ )
     {
-      CPoint temp2 = *vec_Points_Origin[(i+j)%size];
+      int index=(i+j)%size;
+      if (index<0)
+      {
+        index=index+size;
+      }
+      CPoint temp2 = *vec_Points_Origin[index];
       temp1 = (temp1 + temp2);
     }
-    CPoint temp = temp1/smooth_factor;
+    CPoint temp = temp1/(smooth_factor*2+2);
     *vec_Points_Origin[i]= temp;
   } 
 }
+
 #include"CFileDebug.h"
 void CContour::calculate_medial_map(double** medial_axis)
 {

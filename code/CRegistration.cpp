@@ -181,12 +181,19 @@ void CRegistration:: regist_lower_long_higher_short(CContour* lower,CContour* hi
     longer=higher;shorter=lower;
   }
 
-  if(shorter->m_layer->medial_axis_count>0)
+  if (use_medial_axis)
   {
-    longer->calculate_medial_map(shorter->m_layer->medial_axis);
-    longer->swap_map_medialmap();
-    freeform_res1(longer,shorter);
-    longer->swap_medialmap_map();
+    if(shorter->m_layer->medial_axis_count>0)
+    {
+      longer->calculate_medial_map(shorter->m_layer->medial_axis);
+      longer->swap_map_medialmap();
+      freeform_res1(longer,shorter);
+      longer->swap_medialmap_map();
+    }
+    else
+    {
+      freeform_res1(longer,shorter);
+    }
   }
   else
   {
@@ -446,7 +453,7 @@ void CRegistration::gradientdescent_smoother(CContour* lower,CContour* higher,do
     current_params = record[kNumberOfIteration];
   }
   std::cout<<"Iteration:"<<it<<"\n";
-  // for (int xx = 0; xx < MatrixRes; ++xx)
+  {}// for (int xx = 0; xx < MatrixRes; ++xx)
   // {
   //   for (int yy = 0; yy < MatrixRes; ++yy)
   //   {
@@ -780,10 +787,11 @@ void CRegistration::get_correspondence(CCorrespond* corres,CContour* shorter,CCo
   for (int i = 0; i < N; ++i)
   {
     temp =*(shorter->vec_new_points[i]);
-    if (shorter->m_layer->medial_axis_count>0)
+    int shorter_layerID=shorter->LayerID;
+    if (shorter->m_layer->medial_axis_count>0&&use_medial_axis)
     {
       index=get_closest_point(longer->vec_Points_Origin,shorter->m_layer->vec_medial_points,temp);
-      std::cout<<"use medial_axis"<<"\n";
+      //      std::cout<<"use medial_axis"<<"\n";
     }
     else
     {
@@ -791,15 +799,21 @@ void CRegistration::get_correspondence(CCorrespond* corres,CContour* shorter,CCo
     }
 
     Parapoint * new_para_point= new Parapoint();
-    if (corres->CorrespondLayer1==temp.z)
+    if (corres->CorrespondLayer1==shorter_layerID)
     {
       // new_para_point->point1 = *(shorter->vec_points[i]);
       //new_para_point->point2 = *(longer->vec_points[index]);
        new_para_point->point1 = *(shorter->vec_Points_Origin[i]);
-       if (use_medial_axis_point)
+       if (use_medial_axis_point&&use_medial_axis)
        {
-         new_para_point->point2 = *(shorter->m_layer->vec_medial_points[index]);
-         new_para_point->point2.z=longer->vec_Points_Origin[0]->z;
+         CPoint* project_point=new CPoint();
+         project_point->index=project_point->get_index();
+         int temp_index = project_point->index;
+         *project_point=*(shorter->m_layer->vec_medial_points[index]);
+         project_point->index=temp_index;
+         project_point->z=longer->vec_Points_Origin[0]->z;
+         new_para_point->point2 = *project_point;
+         longer->vec_Points_project.push_back(project_point);
        }
        else
        {
@@ -811,10 +825,16 @@ void CRegistration::get_correspondence(CCorrespond* corres,CContour* shorter,CCo
       //new_para_point->point2 = *(shorter->vec_points[i]);
       //new_para_point->point1 = *(longer->vec_points[index]);
       new_para_point->point2 = *(shorter->vec_Points_Origin[i]);
-      if (use_medial_axis_point)
+      if (use_medial_axis_point&&use_medial_axis)
       {
-        new_para_point->point1 = *(shorter->m_layer->vec_medial_points[index]);
-        new_para_point->point1.z=longer->vec_Points_Origin[0]->z;
+        CPoint* project_point=new CPoint();
+        project_point->index=project_point->get_index();
+        int temp_index = project_point->index;
+        *project_point=*(shorter->m_layer->vec_medial_points[index]);
+        project_point->index=temp_index;
+        project_point->z=longer->vec_Points_Origin[0]->z;
+        new_para_point->point1 = *project_point;
+        longer->vec_Points_project.push_back(project_point);
       }
       else
       {

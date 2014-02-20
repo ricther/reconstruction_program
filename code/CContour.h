@@ -30,6 +30,7 @@ class CContour
   std::vector<CPoint*> vec_Points_Inter;
   std::vector<CPoint*> vec_Points_Vicinity;
   std::vector<CPoint*> vec_new_points_vicinity;//change after bspline_update
+  std::vector<CPoint*> vec_Points_project;//points project from adjacent layer's medial_axis;
   void operator=(CContour &temp);
   bool read_single_layer_without_z(std::fstream&);
   bool read_contour_with_z(std::fstream& fin);

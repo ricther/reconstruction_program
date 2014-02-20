@@ -31,10 +31,11 @@ const int MatrixRes=56;
 const int NumRows=700;
 const int NumCols=700;
 const int interval_of_point=1;
-const float layer_interval_scale=20;
+const float layer_interval_scale=5;
 const int interval_of_line_layer=1;// the interval of the lines within one layer
 const int distance_medialaxis_contour=15;
 const int iteration_number=500;
+const bool use_medial_axis=true;
 
 CShape m_source;
 
@@ -77,8 +78,6 @@ void init_data(CShape&m_source)
       }
     }
   }
-  
-
   m_source.initial(vec_filename);
   m_source.Setup();
   m_source.Registration();
@@ -124,9 +123,9 @@ double xmaxs[5] = {0.25,0.50,1,0.5,1};
 double ymins[5] = {0,0,0,.5,.5};
 double ymaxs[5]= {0.5,0.5,0.5,1,1};
 // double xmins[5] = {0,0,0,0,0};
-// double xmaxs[5] = {1,0,0,0,0};
+// double xmaxs[5] = {0,0,0,0,1};
 // double ymins[5] = {0,0,0,0,0};
-// double ymaxs[5]= {1,0,0,0,0};
+// double ymaxs[5]= {0,0,0,0,1};
 
 
 void vtk_draw_view1(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointer<vtkRenderWindowInteractor> interactor)
