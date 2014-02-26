@@ -2,6 +2,7 @@
 #include"CPoint.h"
 #include "assert.h"
 #include "CLayer.h"
+#include "math.h"
 using namespace std;
 
 CContour::CContour(const float ID,CLayer* layer):lattice_x(NULL),lattice_y(NULL)
@@ -54,7 +55,8 @@ void CContour:: check_edge(double tempx,double tempy )
     {
       last_x=tempx;last_y=tempy;
     }
-    length+=(tempx-last_x)*(tempx-last_x)+(tempy-last_y)*(tempy-last_y);
+    float temp_value=(tempx-last_x)*(tempx-last_x)+(tempy-last_y)*(tempy-last_y);
+    length+=sqrt(temp_value);
     // std::cout<<length<<"\t"<<tempx<<"\t"<<last_x<<"\t"<<tempy<<"\t"<<last_y<<"\n";
     last_x=tempx;last_y=tempy;
 }

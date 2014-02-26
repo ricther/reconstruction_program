@@ -76,7 +76,7 @@ void CShapeDisplay::draw_text(vtkSmartPointer<vtkRenderer> renderer, string str)
   textActor->SetInput (str.c_str());
   textActor->GetTextProperty()->SetColor ( 1.0,0.0,0.0 );
   line_space=textActor->GetTextProperty()->GetLineSpacing();
-}
+ }
 
 #include <sstream>
 void CShapeDisplay::draw_layerID(vtkSmartPointer<vtkRenderer> renderer ,float layerID)

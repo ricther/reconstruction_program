@@ -35,7 +35,7 @@ const float layer_interval_scale=5;
 const int interval_of_line_layer=1;// the interval of the lines within one layer
 const int distance_medialaxis_contour=15;
 const int iteration_number=500;
-const bool use_medial_axis=true;
+const bool use_medial_axis=false;
 
 CShape m_source;
 
@@ -156,13 +156,13 @@ void vtk_draw_view2(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
   //renderer->RemoveLight( renderer->GetLights()->GetNextItem());
   vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
   light->SetLightTypeToSceneLight();
-  light->SetPosition(0, 0, 0);
-  light->SetFocalPoint(250,250,250);
-  light->SetColor(1,1,1);
+  light->SetPosition(100, 100, 100);
+  light->SetFocalPoint(-100,-100,-100); 
+  light->SetColor(0.5,0.5,0);
   light->SetPositional(true); // required for vtkLightActor below
   renderer->AddLight(light);
   renderer->UpdateLightsGeometryToFollowCamera();
-  light->SetSwitch(true);
+  light->SetSwitch(false);
   // light->SetConeAngle(10);
   // light->SetFocalPoint(lightFocalPoint[0], lightFocalPoint[1], lightFocalPoint[2]);
   // light->SetDiffuseColor(1,0,0);
