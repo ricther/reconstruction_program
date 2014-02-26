@@ -35,7 +35,7 @@ const float layer_interval_scale=5;
 const int interval_of_line_layer=1;// the interval of the lines within one layer
 const int distance_medialaxis_contour=15;
 const int iteration_number=500;
-const bool use_medial_axis=true;
+const bool use_medial_axis=false;
 
 CShape m_source;
 
