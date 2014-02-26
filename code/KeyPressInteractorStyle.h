@@ -70,6 +70,11 @@ class KeyPressInteractorStyle : public vtkInteractorStyleTrackballCamera
       {
         m_display->key_bracketright();
       }
+
+      if (key == "1" || key =="2" || key == "3" || key=="4"|| key== "5"||key=="0")
+      {
+        m_display->key_change_viewport(key);
+      }
       // Forward events
       vtkInteractorStyleTrackballCamera::OnKeyPress();
     }

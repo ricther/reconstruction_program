@@ -76,12 +76,12 @@ public:
   void key_f();
   void key_bracketleft();
   void key_bracketright();
-
+  void key_change_viewport(std::string);
 private:
     void init_contour_represetation_widget(vtkSmartPointer<vtkRenderWindowInteractor> interactor,vtkSmartPointer<vtkRenderer>,std::vector<CPoint*>,int scale);
   void init_contour_represetation(vtkSmartPointer<vtkRenderer>,std::vector<CPoint*>,int scale,double level);
   vtkSmartPointer<vtkActor> initialActor(std::vector<CPoint*>::iterator,std::vector<CPoint*>::iterator,int,double);
-
+  
 
  
   
@@ -90,7 +90,7 @@ private:
   void draw_layerID(vtkSmartPointer<vtkRenderer> renderer ,float layerID);
   void draw_contour_for_skeleton(int layerID,vtkSmartPointer<vtkRenderer>);
   void update_layer_text(float layerID);
-
+  void update_viewport(std::string key);
   vtkSmartPointer<vtkTextActor> m_layer_text_actor;
   vtkSmartPointer<vtkActor> m_contour_actor;
   vtkSmartPointer<vtkPolyData> m_contour_PolyData;

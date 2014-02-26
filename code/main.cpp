@@ -118,19 +118,22 @@ void vtk_setup()
   interactor->Start();
 }
 
+//cordinate for normal
 double xmins[5] = {0,.25,0.5,0,.5};
 double xmaxs[5] = {0.25,0.50,1,0.5,1};
 double ymins[5] = {0,0,0,.5,.5};
 double ymaxs[5]= {0.5,0.5,0.5,1,1};
+
 // double xmins[5] = {0,0,0,0,0};
 // double xmaxs[5] = {0,0,0,0,1};
 // double ymins[5] = {0,0,0,0,0};
 // double ymaxs[5]= {0,0,0,0,1};
 
-
+vtkSmartPointer<vtkRenderer> Renderers[5];
 void vtk_draw_view1(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointer<vtkRenderWindowInteractor> interactor)
 {
   vtkSmartPointer<vtkRenderer> renderer= vtkSmartPointer<vtkRenderer>::New();
+  Renderers[0]=renderer;
   //  renderer->RemoveLight( renderer->GetLights()->GetNextItem());
   renderWindow->AddRenderer(renderer);
   
@@ -152,17 +155,17 @@ void vtk_draw_view2(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
 {
   vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
   renderWindow->AddRenderer(renderer);
-  
+  Renderers[1]=renderer;
   //renderer->RemoveLight( renderer->GetLights()->GetNextItem());
   vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
   light->SetLightTypeToSceneLight();
-  light->SetPosition(0, 0, 0);
-  light->SetFocalPoint(250,250,250);
-  light->SetColor(1,1,1);
+  light->SetPosition(100, 100, 100);
+  light->SetFocalPoint(-100,-100,-100); 
+  light->SetColor(0.5,0.5,0);
   light->SetPositional(true); // required for vtkLightActor below
   renderer->AddLight(light);
   renderer->UpdateLightsGeometryToFollowCamera();
-  light->SetSwitch(true);
+  light->SetSwitch(false);
   // light->SetConeAngle(10);
   // light->SetFocalPoint(lightFocalPoint[0], lightFocalPoint[1], lightFocalPoint[2]);
   // light->SetDiffuseColor(1,0,0);
@@ -187,7 +190,7 @@ void vtk_draw_view3(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
 {
   vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
   renderWindow->AddRenderer(renderer);
-  
+  Renderers[2]=renderer;
   renderer->SetBackground(0.1, 0.2, 0.4);
 
   renderer->SetViewport(xmins[2],ymins[2],xmaxs[2],ymaxs[2]);
@@ -205,7 +208,7 @@ void vtk_draw_view4(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
 {
   vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
   renderWindow->AddRenderer(renderer);
-  
+  Renderers[3]=renderer;
   renderer->SetBackground(0.1, 0.2, 0.4);
 
   renderer->SetViewport(xmins[3],ymins[3],xmaxs[3],ymaxs[3]);
@@ -223,7 +226,7 @@ void vtk_draw_view5(vtkSmartPointer<vtkRenderWindow> renderWindow,vtkSmartPointe
 {
   vtkSmartPointer<vtkRenderer> renderer = vtkSmartPointer<vtkRenderer>::New();
   renderWindow->AddRenderer(renderer);
-  
+  Renderers[4]=renderer;
   renderer->SetBackground(0.1, 0.2, 0.4);
 
   renderer->SetViewport(xmins[4],ymins[4],xmaxs[4],ymaxs[4]);

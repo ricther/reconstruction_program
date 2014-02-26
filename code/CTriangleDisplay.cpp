@@ -146,7 +146,7 @@ void CTriangleDisplay:: set_up_vtk()
   //  m_polydata_mapper->SetInput(m_polydata);
   m_actor->SetMapper(m_polydata_mapper);
   m_actor->GetProperty()->SetColor(1.0,0.4,0);
-  m_actor->GetProperty()->SetAmbient(1.0);
+  m_actor->GetProperty()->SetAmbient(0.5);
   m_actor->GetProperty()->SetDiffuse(0.5);
   m_actor->GetProperty()->SetSpecular(0.5);
   //  m_actor->GetProperty()->SetRepresentationToWireframe();

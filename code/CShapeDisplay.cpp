@@ -76,7 +76,7 @@ void CShapeDisplay::draw_text(vtkSmartPointer<vtkRenderer> renderer, string str)
   textActor->SetInput (str.c_str());
   textActor->GetTextProperty()->SetColor ( 1.0,0.0,0.0 );
   line_space=textActor->GetTextProperty()->GetLineSpacing();
-}
+ }
 
 #include <sstream>
 void CShapeDisplay::draw_layerID(vtkSmartPointer<vtkRenderer> renderer ,float layerID)
@@ -456,6 +456,46 @@ void CShapeDisplay::key_bracketright()
   ++current_lineID;
   m_correspond->update_actors(current_LayerID,current_lineID);
   m_render_window->Render();
-  m_render_window->Render();
+
     
+}
+
+extern vtkSmartPointer<vtkRenderer> Renderers[5];
+extern double xmins[5];
+extern double xmaxs[5];
+extern double ymins[5];
+extern double ymaxs[5];
+
+void CShapeDisplay::key_change_viewport(std::string key)
+{
+  update_viewport(key);
+  m_render_window->Render();
+}
+
+void CShapeDisplay::update_viewport(std::string key)
+{
+  int N=5;
+  int index= atoi(key.c_str());
+  if (index!=0)
+  {
+    index=index -1;
+    for (int i = 0; i < N; ++i)
+    {
+      if (i == index)
+      {
+        Renderers[i]->SetViewport(0,0,1,1);
+      }
+      else
+      {
+        Renderers[i]->SetViewport(0,0,0,0);
+      }
+    }
+  }
+  else if(index==0)
+  {
+    for (int i = 0; i < N; ++i)
+    {
+      Renderers[i]->SetViewport(xmins[i],ymins[i],xmaxs[i],ymaxs[i]);
+    }
+  }
 }
