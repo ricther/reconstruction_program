@@ -2,6 +2,7 @@
 #include "CBaseDisplay.h"
 #include <map>
 #include "CContour.h"
+extern const bool show_vertex_on_edge;
 class CLayer;
 class CPoint;
 class CContourDisplay:public CBaseDisplay

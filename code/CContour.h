@@ -14,6 +14,7 @@ extern const int NumRows;
 extern const int NumCols;
 extern const int interval_of_point;
 extern const float layer_interval_scale;
+
 class CContour
 {
 

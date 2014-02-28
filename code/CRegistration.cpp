@@ -87,12 +87,13 @@ void CRegistration::freeform_res1(CContour* lower,CContour*higher)
   //filestr=higher->filename+"intensity_data_1";
   // CFileDebug m_file(filestr);
   //filestr=higher->filename+"intensity_data_2";
-  //CFileDebug m_file2(filestr);
+  // CFileDebug m_file2("synthetic3_higher_1_dismap");
   ///////////////
   //first time calculate the intensity before bespline as though the points do not changed
   //calculate the intensity in self distancesmap
   compute_intensity(higher->vec_Points_Vicinity,higher->m_Map->DistancsMap,higher->vec_intensity_old);
   // m_file.Output_intensity_data(higher->vec_Points_Vicinity,higher->vec_intensity_old);
+  // m_file2.Output(higher->m_Map->DistancsMap);
   init_lattice(lower);
   init_lattice(higher);
   bspline_update(higher,0,higher->vec_Points_Vicinity,higher->vec_new_points_vicinity);
@@ -857,6 +858,7 @@ int CRegistration::get_closest_point(std::vector<CPoint*>&vec_points,CPoint poin
   {
     temp =*(vec_points[i]);
     double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
+    d=sqrt(d);
     if (d<distancs)
     {
       distancs=d;
@@ -877,6 +879,7 @@ int CRegistration::get_closest_point(std::vector<CPoint*>&vec_points,std::vector
   {
     temp =*(vec_points[i]);
     double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
+    d=sqrt(d);
     if (d<distancs)
     {
       distancs=d;
@@ -888,6 +891,7 @@ int CRegistration::get_closest_point(std::vector<CPoint*>&vec_points,std::vector
   {
     temp =*(medial_points[i]);
     double d=(temp.x-point.x)*(temp.x-point.x)+(temp.y-point.y)*(temp.y-point.y);
+    d=sqrt(d);
     if (d<distancs)
     {
       use_medial_axis_point=true;

@@ -13,6 +13,7 @@ extern const int NumRows;
 extern const int NumCols;
 extern const float layer_interval_scale;
 extern const int distance_medialaxis_contour;
+
 class CLayer
 {
  public:

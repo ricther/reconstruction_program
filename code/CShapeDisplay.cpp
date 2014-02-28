@@ -148,7 +148,7 @@ void CShapeDisplay::draw_normal_points(vtkSmartPointer<vtkRenderer> renderer)
 
 void CShapeDisplay::draw_lattice(vtkSmartPointer<vtkRenderer> renderer)
 {
-  CLayer* temp = m_shape->map_Layer[20];
+  CLayer* temp = m_shape->map_Layer[0];
   CContour* temp_contour=temp->map_contour[temp->map_contourID[0]];
   draw_lattice_content(renderer,temp_contour,1);
   draw_lattice_content(renderer,temp_contour,2);
@@ -217,14 +217,14 @@ void CShapeDisplay::draw_lattice_content(vtkSmartPointer<vtkRenderer> renderer,C
 
 void CShapeDisplay::draw_medial_axis(vtkSmartPointer<vtkRenderer> renderer)
 {
-  CLayer* temp = m_shape->map_Layer[19];
+  CLayer* temp = m_shape->map_Layer[0];
   vector<CPoint*> vec=temp->vec_medial_points;
   int size= vec.size();
   for (int i = 0; i < size; ++i)
   {
     vtkSmartPointer<vtkSphereSource> point=vtkSmartPointer<vtkSphereSource>::New();
     point->SetCenter(vec[i]->x,vec[i]->y,vec[i]->z);
-    point->SetRadius(2.0);
+    point->SetRadius(0.1);
  
     vtkSmartPointer<vtkPolyDataMapper> mapper = 
         vtkSmartPointer<vtkPolyDataMapper>::New();

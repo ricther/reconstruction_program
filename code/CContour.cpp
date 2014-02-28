@@ -153,12 +153,17 @@ bool CContour::read_contour_with_z(fstream& fin)
   calculate_one_moment();
   return true;
 }
-
+#include "CFileDebug.h"
 void CContour::InitMap()
 {
   // normalize();
   m_Map= new CMap(this);
   m_Map->setup();
+  // if(LayerID==1&&contourID==1)
+  // {
+  //   CFileDebug m_file2("synthetic3_1_1_dismap");
+  //   m_file2.Output(m_Map->DistancsMap);
+  // }
   m_Map->gradient();
 }
 

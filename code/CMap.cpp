@@ -34,7 +34,7 @@ void CMap::setup()
   //tempstr=filestr+"_after_region_fill";
   //CFileDebug m_debugfile2(tempstr.c_str());
   //tempstr=filestr+"_sign";
-  //CFileDebug m_debugfile3(tempstr.c_str());
+
   mallocMap_char(SignMap);
   mallocMap_double(DistancsMap);
   interp_closed();
@@ -42,7 +42,11 @@ void CMap::setup()
   //CFileDebug m_debugfile4(tempstr.c_str());
   //m_debugfile4.Output_points(m_contour->vec_Points_Inter);
   drawcontour();
-  //m_debugfile3.Output_sign(SignMap);
+  // if(m_contour->LayerID==1&&m_contour->contourID==1)
+  // {
+  //   CFileDebug m_debugfile3("synthetic2_sign_1_1");
+  //   m_debugfile3.Output_sign(SignMap);
+  // }
   //m_debugfile.Output(DistancsMap);
   fillupoutside();
   // string tempstr = filestr+"_after_fillupoutside";
@@ -138,6 +142,11 @@ void CMap::interp_closed()
     insertPoint(m_contour->vec_Points_Origin.front());
   
     numpoints++;        
+  }
+  if (m_contour->LayerID==1&&m_contour->contourID==1)
+  {
+    CFileDebug m_debugfile3("synthetic2_points_1_1");
+    m_debugfile3.Output_points(m_contour->vec_points);
   }
 }
     

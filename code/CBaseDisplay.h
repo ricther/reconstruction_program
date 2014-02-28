@@ -14,14 +14,16 @@ public:
   vtkSmartPointer<vtkPolyDataMapper> m_polydata_mapper;
   vtkSmartPointer<vtkPoints>m_points;
   vtkSmartPointer<vtkCellArray>m_lines;
+  vtkSmartPointer<vtkCellArray>m_vertices;
   CBaseDisplay()
   {
     m_lines=vtkSmartPointer<vtkCellArray>::New();
+    m_vertices=vtkSmartPointer<vtkCellArray>::New();
     m_points=vtkSmartPointer<vtkPoints>::New();
     m_actor=vtkSmartPointer<vtkActor>::New();
     m_polydata=vtkSmartPointer<vtkPolyData>::New();
     m_polydata_mapper=vtkSmartPointer<vtkPolyDataMapper>::New();
-
+    
     int n=999999;
     max_x=-n;min_x=n;
     max_y=-n;min_y=n;

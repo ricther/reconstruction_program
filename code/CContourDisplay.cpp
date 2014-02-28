@@ -1,6 +1,7 @@
 #include "CContourDisplay.h"
 #include "CPoint.h"
 #include "CLayer.h"
+#include "vtkVertex.h"
 vtkSmartPointer<vtkActor> CContourDisplay::initialActor(float layerID,int contourID)
 {
   CLayer* temp = map_Layer[layerID];
@@ -15,21 +16,33 @@ void CContourDisplay::initial_contour_actor(std::vector<CPoint*>::iterator point
 {
   vtkIdType * lineIndices = new vtkIdType[size+1];
   int count=0;
+  
   for (;point_itr!=point_etr;++point_itr)
   {
     m_points->InsertPoint(static_cast<vtkIdType>(count),(*point_itr)->x,(*point_itr)->y,level*(*point_itr)->z);
     lineIndices[count] = static_cast<vtkIdType>(count);
-    ++count;
+      ++count;
   }
+  m_vertices->InsertNextCell(size,lineIndices);
+  
   lineIndices[count] = 0;
   m_lines->InsertNextCell(size+1,lineIndices);
+
+  
   delete [] lineIndices;
 
   m_polydata->SetPoints(m_points);
   m_polydata->SetLines(m_lines);
+  
+  if( show_vertex_on_edge)
+  {
+    m_polydata->SetVerts(m_vertices);    
+  }
+
   m_polydata_mapper->SetInput(m_polydata);
 
   m_actor->SetMapper(m_polydata_mapper);
+  m_actor->GetProperty()->SetPointSize(5);
 }
 
 void CContourDisplay::update_contour_polydata(float layerID,int contourID)
@@ -48,18 +61,30 @@ void CContourDisplay::update_polydata(std::vector<CPoint*>::iterator point_itr,s
   vtkIdType * lineIndices = new vtkIdType[size+1];
   m_points->Reset();
   m_lines->Reset();
+  m_vertices->Reset();
+
+      
   for (;point_itr!=point_etr;++point_itr)
   {
 
     m_points->InsertPoint(static_cast<vtkIdType>(count),(*point_itr)->x,(*point_itr)->y,(*point_itr)->z*level);
     lineIndices[count] = static_cast<vtkIdType>(count);
+
     ++count;
   }
+  m_vertices->InsertNextCell(size,lineIndices);
   lineIndices[count] = 0;
   m_lines->InsertNextCell(size+1,lineIndices);
+
   delete [] lineIndices;
   m_polydata->SetPoints(m_points);
   m_polydata->SetLines(m_lines);
+
+  if( show_vertex_on_edge)
+  {
+    m_polydata->SetVerts(m_vertices);    
+  }
+
   m_polydata->Modified();
   m_polydata->Update();  
 }
