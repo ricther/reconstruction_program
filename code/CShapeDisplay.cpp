@@ -247,7 +247,7 @@ void CShapeDisplay::draw_transformed_points(vtkSmartPointer<vtkRenderer> rendere
   {
     renderer->AddActor((*itr)->m_actor);
   }
-  draw_medial_axis(renderer);
+  //  draw_medial_axis(renderer);
   //  draw_lattice(renderer);
   draw_text(renderer,"transformed_points");
   draw_layerID(renderer,1.0);

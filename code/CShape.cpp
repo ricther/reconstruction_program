@@ -57,7 +57,7 @@ void CShape::read()
   if(fin.is_open())
   {
     bool result=true;
-    int levelID=-1;
+    float levelID=-1;
     while(result&&fin.good())
     {
       int pos=fin.tellg();

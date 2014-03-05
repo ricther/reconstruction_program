@@ -78,7 +78,7 @@ bool CLayer:: read_layer_multi_contour_with_z(std::fstream& fin)
 {
 
   int pos=-1;
-  int levelID;
+  float levelID;
   int contourID;
   bool result=true;
 

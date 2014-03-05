@@ -100,7 +100,8 @@ bool CContour::read_single_layer_without_z(fstream& fin)
 
 bool CContour::read_contour_with_z(fstream& fin)
 {
-  int levelID=-1,temp_contourID=-1;
+  float levelID=-1;
+  int temp_contourID=-1;
   int pos=-1;
   if(fin.good())
     {

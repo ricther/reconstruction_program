@@ -15,7 +15,7 @@ CSkeletalPoint::CSkeletalPoint(int id)
   node=NULL;
 }
 
-CBranch::CBranch(int id,std::map<int,CSkeletalPoint*>&map):map_id_skeletal(map)
+CBranch::CBranch(int id,std::map<int,CSkeletalPoint*>&map, std::map<float,CLayer*>::iterator begin,std::map<float,CLayer*>::iterator end):map_id_skeletal(map),map_begin(begin),map_end(end)
 {
   branchID=id;
   map_id_spoint.clear();
@@ -46,17 +46,20 @@ void CBranch::build_branch(int sign, CPoint* lower_point, std::map<float,CLayer*
     temp_point->color+=1<<branchID;
     //    map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
     std::map<float,CLayer*>::iterator itr=nitr;
-    itr--;
-    CPoint* pre_point=find_next_skeletalpoint(sign,lower_point,itr->second);
-    CSkeletalPoint* pre_node=check_skeletalpoint(pre_point);
-    pre_node->color+=1<<branchID;
-    map_id_spoint.insert(make_pair(nodeID_counter++,pre_node));
-    map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
-    nitr++;
-    if (nitr==etr)
+    CPoint* pre_point; CSkeletalPoint* pre_node;
+    if (itr!=map_begin)
     {
-      assert(false);
+      pre_point=find_next_skeletalpoint(sign,lower_point,itr->second);
+      pre_node=check_skeletalpoint(pre_point);
+      pre_node->color+=1<<branchID;
+      map_id_spoint.insert(make_pair(nodeID_counter++,pre_node));
+      map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
     }
+    nitr++;nitr++;
+    // if (nitr==etr)
+    // {
+    //   assert(false);
+    // }
     while(nitr!=etr)
     {
       CPoint* next_point=find_next_skeletalpoint(sign,lower_point,nitr->second);
@@ -109,6 +112,10 @@ CPoint* CBranch::find_next_skeletalpoint(int sign,CPoint* point,CLayer* next_lay
     {
 
       CSkeletalPoint* node= check_skeletalpoint(point2);
+      if (node->node->z==40)
+      {
+        int a=0;
+      }
       if (sign>=0)
       {
         if (node->use_as_lower_skeletal_counter <= sign)
@@ -160,7 +167,7 @@ void CSkeleton::build_skeleton(map<float,CLayer*>& map_layer)
     {
       for (int i = 0; i < lower_layer_contour_num; ++i)
       {
-        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal);
+        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal,map_begin,map_end);
         branchID_counter++;
         int id=itr->second->map_contourID[i];
         CContour* temp_contour=itr->second->map_contour[id];
@@ -177,6 +184,7 @@ void CSkeleton::build_skeleton_new(std::map<float ,CLayer*>& map_layer)
 {
   initial_skeletal_points(map_layer);
   std::map<float,CLayer*>::iterator itr=map_layer.begin(),etr=map_layer.end(),nitr;
+  map_begin=itr;map_end=etr;
   std::queue< skeletal_branch > m_queue;
   int sign=-2,old_sign=-2,old_higher_num=-1;
   for (; itr!=etr; ++itr)
@@ -232,7 +240,7 @@ void CSkeleton::build_skeleton_from_queue(std::queue<skeletal_branch>& queue)
     {
       for (int i = 0; i < lower_layer_contour_num; ++i)
       {
-        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal);
+        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal,map_begin,map_end);
         branchID_counter++;
         int id=itr->second->map_contourID[i];
         CContour* temp_contour=itr->second->map_contour[id];
@@ -244,7 +252,7 @@ void CSkeleton::build_skeleton_from_queue(std::queue<skeletal_branch>& queue)
     {
       for (int i = 0; i < higher_layer_contour_num; ++i)
       {
-        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal);
+        CBranch* new_branch=new CBranch(branchID_counter,map_id_skeletal,map_begin,map_end);
         branchID_counter++;
         int id=nitr->second->map_contourID[i];
         CContour* temp_contour=nitr->second->map_contour[id];
@@ -265,7 +273,7 @@ void CSkeleton::initial_skeletal_points(map<float,CLayer*>& map_layer)
       CSkeletalPoint *temp_point=new CSkeletalPoint(skeletal_point_counter);
       temp_point->node=c_itr->second->center_point;
       map_id_skeletal.insert(make_pair(skeletal_point_counter++,temp_point));
-      cout<<(temp_point->node)->x<<","<<(temp_point->node)->y<<","<<(temp_point->node)->z<<"\n";
+      cout<<"branches points:"<<(temp_point->node)->x<<","<<(temp_point->node)->y<<","<<(temp_point->node)->z<<"\n";
     }
   }  
 }

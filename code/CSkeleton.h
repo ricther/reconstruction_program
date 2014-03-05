@@ -19,7 +19,7 @@ class CSkeletalPoint
 class CBranch
 {
   public:
-  CBranch(int,std::map<int,CSkeletalPoint*>&);
+  CBranch(int,std::map<int,CSkeletalPoint*>&,std::map<float,CLayer*>::iterator,std::map<float,CLayer*>::iterator);
   int nodeID_counter;
   int branchID;
   std::map<int,CSkeletalPoint*> map_id_spoint;
@@ -30,6 +30,7 @@ class CBranch
   private:
   std::map<int,CSkeletalPoint*>::iterator itr,etr;
   std::map<int,CSkeletalPoint*>& map_id_skeletal;
+  std::map<float,CLayer*>::iterator map_begin,map_end;
 }
 ;
 
@@ -51,6 +52,7 @@ class CSkeleton
   void build_skeleton_from_queue(std::queue<skeletal_branch>&);
   void initial_skeletal_points(std::map<float,CLayer*>&);
   std::map<int,CSkeletalPoint*> map_id_skeletal;
+  std::map<float,CLayer*>::iterator map_begin,map_end;
   private:
   int check_contour_num(int,int);
   void insert_queue(std::map<float,CLayer*>::iterator itr, std::map<float,CLayer*> :: iterator etr, std::queue<skeletal_branch>& queue);
