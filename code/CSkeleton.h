@@ -25,7 +25,7 @@ class CBranch
   std::map<int,CSkeletalPoint*> map_id_spoint;
   void build_branch(int sign,CPoint*, std::map<float,CLayer*>::iterator,std::map<float,CLayer*>::iterator etr);
   CSkeletalPoint* check_skeletalpoint(CPoint*);
-  CPoint* find_next_skeletalpoint(int,CPoint* , CLayer*);
+  CPoint* find_next_skeletalpoint(float,CPoint* , CLayer*);
   CSkeletalPoint* new_skeletalpoint(CPoint* point);
   private:
   std::map<int,CSkeletalPoint*>::iterator itr,etr;

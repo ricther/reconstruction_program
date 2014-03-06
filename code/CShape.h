@@ -30,6 +30,7 @@ public:
  void initial_display(vtkSmartPointer<vtkRenderWindow>,vtkSmartPointer<vtkRenderWindowInteractor>);
  CShapeDisplay* m_display;
  CSkeleton *m_skeleton;
+ float get_next_layer(float now_layerID,int direction);//direction 0 down 1 up
 private:
 
  CRegistration * m_registration;

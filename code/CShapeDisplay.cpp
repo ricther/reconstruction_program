@@ -351,7 +351,7 @@ void CShapeDisplay::draw_triangle(vtkSmartPointer<vtkRenderer> renderer,vtkSmart
 }
 void CShapeDisplay:: key_down()
 {
-  current_LayerID--;
+  current_LayerID=m_shape->get_next_layer(current_LayerID,0);
   if (current_LayerID<min_z)
   {
     current_LayerID=min_z;
@@ -373,7 +373,7 @@ void CShapeDisplay:: key_down()
 
 void CShapeDisplay:: key_up()
 {
-  current_LayerID++;
+  current_LayerID=m_shape->get_next_layer(current_LayerID,1);
   if (current_LayerID>max_z)
   {
     current_LayerID=max_z;
@@ -396,7 +396,7 @@ void CShapeDisplay:: key_up()
 void CShapeDisplay::key_minus()
 {
   float temp = m_origin_contours->margin;
-  --temp;
+  temp=temp*2;
   if(temp<0)
   {
     temp=min_z;
@@ -412,7 +412,7 @@ void CShapeDisplay::key_minus()
 void CShapeDisplay::key_equal()
 {
   float temp = m_origin_contours->margin;
-  ++temp;
+  temp=temp*2;
   if(temp>max_z)
   {
     temp=max_z;

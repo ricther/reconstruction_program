@@ -34,7 +34,7 @@ const int interval_of_point=1;
 const float layer_interval_scale=1;
 const int interval_of_line_layer=1;// the interval of the lines within one layer
 const int distance_medialaxis_contour=15;
-const int iteration_number=500;
+const int iteration_number=60;
 const bool use_medial_axis=true;
 const bool use_normalize_for_points=false;//not use now, must use ,  becuse maybe the positon of the points was not in the first section for the cooradinate.
 const bool show_vertex_on_edge=true;//affect the CBaseDisplay
@@ -66,7 +66,7 @@ void init_data(CShape&m_source)
 {
   char currentPath[200];
   getcwd(currentPath, sizeof(currentPath));
-  fstream fin("../config3",ios_base::in);
+  fstream fin("../config",ios_base::in);
   std::vector<string> vec_filename;
   string temp;
   if(fin.is_open())

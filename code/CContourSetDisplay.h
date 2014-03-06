@@ -14,7 +14,9 @@ public:
   {
      float n=999999;
      max_z=-n;min_z=n;
-     margin=1;
+     float o=map_Layer.begin()->first;
+     float m=map_Layer.rbegin()->first;
+     margin=(m-o)/(map_Layer.size()-1);
   }
   float margin;
 private:

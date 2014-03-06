@@ -2,7 +2,7 @@
 #include "CContour.h"
 #include "assert.h"
 #include "iostream"
-
+#include "math.h"
 using namespace std;
 CSkeletalPoint::CSkeletalPoint(int id)
 {
@@ -29,9 +29,21 @@ void CBranch::build_branch(int sign, CPoint* lower_point, std::map<float,CLayer*
 
     temp_point->color+=1<<branchID;
     map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
+    CPoint* next_point=find_next_skeletalpoint(sign,lower_point,nitr->second);
+    temp_point=check_skeletalpoint(next_point);
+    temp_point->node=next_point;
+    temp_point->color+=1<<branchID;
+    map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
+    ++nitr;
+    lower_point = next_point;
     while(nitr!=etr)
     {
-      CPoint* next_point=find_next_skeletalpoint(sign,lower_point,nitr->second);
+      float new_sign=sign*1.0/(sign*1.0*sign+0.1);
+      next_point=find_next_skeletalpoint(new_sign,lower_point,nitr->second);
+      if (next_point==NULL)
+      {
+        break;
+      }
       temp_point=check_skeletalpoint(next_point);
       temp_point->node=next_point;
       temp_point->color+=1<<branchID;
@@ -47,14 +59,13 @@ void CBranch::build_branch(int sign, CPoint* lower_point, std::map<float,CLayer*
     //    map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
     std::map<float,CLayer*>::iterator itr=nitr;
     CPoint* pre_point; CSkeletalPoint* pre_node;
-    if (itr!=map_begin)
-    {
-      pre_point=find_next_skeletalpoint(sign,lower_point,itr->second);
-      pre_node=check_skeletalpoint(pre_point);
-      pre_node->color+=1<<branchID;
-      map_id_spoint.insert(make_pair(nodeID_counter++,pre_node));
-      map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
-    }
+  
+    pre_point=find_next_skeletalpoint(sign,lower_point,itr->second);
+    pre_node=check_skeletalpoint(pre_point);
+    pre_node->color+=1<<branchID;
+    map_id_spoint.insert(make_pair(nodeID_counter++,pre_node));
+    map_id_spoint.insert(make_pair(nodeID_counter++,temp_point));
+   
     nitr++;nitr++;
     // if (nitr==etr)
     // {
@@ -62,7 +73,8 @@ void CBranch::build_branch(int sign, CPoint* lower_point, std::map<float,CLayer*
     // }
     while(nitr!=etr)
     {
-      CPoint* next_point=find_next_skeletalpoint(sign,lower_point,nitr->second);
+      float new_sign=sign*1.0/(sign*1.0*sign+0.1);
+      CPoint* next_point=find_next_skeletalpoint(new_sign,lower_point,nitr->second);
       temp_point=check_skeletalpoint(next_point);
       temp_point->node=next_point;
       temp_point->color+=1<<branchID;
@@ -94,10 +106,11 @@ CSkeletalPoint* CBranch::new_skeletalpoint(CPoint* point)
   map_id_skeletal.insert(make_pair(temp_point->ID,temp_point));
   return temp_point;
 }
-CPoint* CBranch::find_next_skeletalpoint(int sign,CPoint* point,CLayer* next_layer)
+CPoint* CBranch::find_next_skeletalpoint(float sign,CPoint* point,CLayer* next_layer)
 {
   std::map<int,CContour*>::iterator itr,etr;
   CPoint* temp_point=NULL;
+  CSkeletalPoint* temp_node=NULL;
   itr=next_layer->map_contour.begin();etr=next_layer->map_contour.end();
   double dis=999999;
   CPoint* point1,*point2;
@@ -108,11 +121,12 @@ CPoint* CBranch::find_next_skeletalpoint(int sign,CPoint* point,CLayer* next_lay
     point1= point;
     point2= (itr->second)->center_point;
     float tempdis=(point1->x-point2->x)*(point1->x-point2->x)+(point1->y-point2->y)*(point1->y-point2->y);
+    tempdis=sqrt(tempdis);
     if (tempdis<dis)
     {
 
       CSkeletalPoint* node= check_skeletalpoint(point2);
-      if (node->node->z==40)
+      if (point->z==72)
       {
         int a=0;
       }
@@ -121,23 +135,59 @@ CPoint* CBranch::find_next_skeletalpoint(int sign,CPoint* point,CLayer* next_lay
         if (node->use_as_lower_skeletal_counter <= sign)
         {
           dis=tempdis;
-          node->use_as_lower_skeletal_counter++;
+          //  node->use_as_lower_skeletal_counter++;
+          temp_node=node;
           temp_point=point2;
         }
       }
       if (sign<0)
       {
-        if (node->use_as_higher_skeletal_counter <= -sign)
+        if (sign <-1)
         {
-          dis=tempdis;
-          node->use_as_higher_skeletal_counter++;
-          temp_point=point2;
+          if (node->use_as_lower_skeletal_counter <= -sign)
+          {
+            dis=tempdis;
+            // node->use_as_higher_skeletal_counter++;
+            temp_node=node;
+            temp_point=point2;
+          }
         }
-
+        else
+        {
+          if (node->use_as_higher_skeletal_counter <= -sign)
+          {
+            dis=tempdis;
+            // node->use_as_higher_skeletal_counter++;
+            temp_node=node;
+            temp_point=point2;
+          }
+        }
       }
     }
   }
-  return temp_point;
+  if(temp_node!=NULL)
+  {
+    if (sign>=0)
+    {
+      temp_node->use_as_lower_skeletal_counter++;
+    }
+    else
+    {
+      if (sign<=-1)
+      {
+        temp_node->use_as_lower_skeletal_counter++;
+      }
+      else
+      {
+        temp_node->use_as_higher_skeletal_counter++;
+      }
+    }
+    return temp_point;
+  }
+  else
+  {
+    return NULL;
+  }
 }
 
 CSkeleton::CSkeleton()

@@ -158,3 +158,33 @@ void CShape::calculate_one_moment()
   moment_one_point.x=sum_x/map_Layer.size();
   moment_one_point.y=sum_y/map_Layer.size();
 }
+//direction = 0 down 1 up
+float CShape::get_next_layer(float now_layerID,int direction)
+{
+  std::map<float,CLayer*>::iterator itr = map_Layer.find(now_layerID);
+  if (direction==0)
+  {
+    if (itr !=map_Layer.begin())
+    {
+      itr--;
+      return itr->first;
+    }
+    else
+    {
+      return itr->first;
+    }
+  }
+  else
+  {
+    std::map<float,CLayer*>::iterator nitr=itr;
+    nitr++;
+    if (nitr != map_Layer.end())
+    {
+      return nitr->first;
+    }
+    else
+    {
+      return itr->first;
+    }
+  }
+}
